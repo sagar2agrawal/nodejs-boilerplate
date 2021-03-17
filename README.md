@@ -63,7 +63,7 @@ https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-
 15. Supertest (for high level api testing) 
 16. @babel/core & @babel/node (for babel helping node environment)
 17. @babel/preset-env (for targeting specific environments)
-
+18. cookie-parser as cookie helper
 
 
 
@@ -98,4 +98,8 @@ https://www.freecodecamp.org/news/how-to-write-a-production-ready-node-and-expre
 - Launch a Typescript version
 - Better Custom error messages with Joi & Celeberate
 - protection against csrf
-- adding jwts in the cookie with secure and http only which is securer
+- Making cookie securer and taking data from env/config
+- Load different config values based on current node environment
+- Making sure the application waits for mongodb connection before starting
+- Configure Corsoption
+- Snyk for vulnerability detection in packages

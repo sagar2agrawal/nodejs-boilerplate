@@ -20,4 +20,7 @@ iamRoutes.patch('/update-name', celebrate(iamValidators.registraton), iamControl
 // updating the name of the user
 iamRoutes.get('/list-users', celebrate(iamValidators.registraton), iamControllers.registration);
 
+// logging in
+iamRoutes.post('/login', celebrate(iamValidators.login), iamControllers.login);
+
 export default iamRoutes;

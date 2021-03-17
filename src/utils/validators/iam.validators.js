@@ -12,6 +12,9 @@ const registrationSchema = Joi.object({
 const loginSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
+}).messages({
+  'string.empty': '{#label} cant be empty!',
+  'any.required': '{#label} is a required field',
 });
 
 // const registrationSchema = Joi.object({

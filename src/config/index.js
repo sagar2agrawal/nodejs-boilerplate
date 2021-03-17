@@ -12,7 +12,10 @@ const config = {
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   DATABASE_URI: process.env.MONGODB_URI,
-  JWT_SECRET: process.env.JWT_SECRET,
+  AUTH: {
+    JWT_SECRET: process.env.JWT_SECRET,
+    AUTH_COOKIE_EXPIRY: process.env.AUTH_COOKIE_EXPIRY,
+  },
   LOG_LEVEL: process.env.NODE_ENV !== 'production' ? 'debug' : 'info',
   API: {
     PREFIX: '/api/v1',

@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import * as Sentry from '@sentry/node';
 import { isCelebrateError } from 'celebrate';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import config from './config/index.js';
 import logger from './utils/logger.js';
@@ -35,6 +36,7 @@ mongoose.connect(config.DATABASE_URI, {
     console.log(error);
   });
 
+app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(express.json({ limit: '50mb' }));
 

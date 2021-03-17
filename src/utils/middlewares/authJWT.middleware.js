@@ -2,12 +2,12 @@ import jwt from 'jsonwebtoken';
 import config from '../../config/index.js';
 
 const authJWT = (req, res, next) => {
-  const authToken = req.headers.authorization;
+  const authToken = req.cookies.AuthToken;
 
   try {
     if (authToken) {
-      const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
-      jwt.verify(token, config.JWT_SECRET, (err, decodedAuthToken) => {
+      // const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
+      jwt.verify(authToken, config.AUTH.JWT_SECRET, (err, decodedAuthToken) => {
         if (err) {
           throw new Error('Issues with Authentication Token');
         }
