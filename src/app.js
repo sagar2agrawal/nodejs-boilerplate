@@ -31,6 +31,7 @@ if (config.NODE_ENV === 'development') {
 mongoose.connect(config.DATABASE_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 })
   .catch((error) => {
     console.log(error);

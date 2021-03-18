@@ -103,3 +103,6 @@ https://www.freecodecamp.org/news/how-to-write-a-production-ready-node-and-expre
 - Making sure the application waits for mongodb connection before starting
 - Configure Corsoption
 - Snyk for vulnerability detection in packages
+
+## Notable Things
+- Pagination has been optimized by using, estimatedDocumentCount for counting and then using promise all to run the queries parallely

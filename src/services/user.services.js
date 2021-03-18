@@ -5,10 +5,14 @@ import logger from '../utils/logger.js';
 export const listAllUsers = async (listUsersDTO) => {
   const { page, pageSize } = listUsersDTO;
 
-  const user = await new User.find()
-    .skip((pageSize * page) - pageSize)
+  const usersList = await User.find({}).skip((pageSize * page) - pageSize)
     .limit(pageSize);
-  return user;
+  return usersList;
+};
+
+export const countAllUsers = async () => {
+  const totalSearchResults = await User.find({}).estimatedDocumentCount();
+  return totalSearchResults;
 };
 
 export const profilePictureUpdate = async (userDTO) => {
