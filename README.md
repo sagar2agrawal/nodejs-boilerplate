@@ -1,8 +1,11 @@
 # nodejs-boilerplate
 
+## Note
+
+This is an open source project showing gratitude and giving back to the community, the open source is aimed for learning and understanding best practice with small piece of code and same time helping other people to learn collaboratively by not just talking but showing them how.
 
 ## Design Principle used
-DDD - Domain Driven Design
+DDD - Domain Driven Design // Working on it
 
 ## The Folder Structure
 - Src
@@ -64,6 +67,9 @@ https://medium.com/@paul_irish/debugging-node-js-nightlies-with-chrome-devtools-
 16. @babel/core & @babel/node (for babel helping node environment)
 17. @babel/preset-env (for targeting specific environments)
 18. cookie-parser as cookie helper
+19. aws-sdk for accessing the aws resources
+20. Multer for file uploads
+21. Multer-s3 for easy uploads to s3 with multer
 
 
 
@@ -91,6 +97,8 @@ https://pm2.keymetrics.io/docs/usage/application-declaration/
 ## Reference
 https://dev.to/santypk4/bulletproof-node-js-project-architecture-4epf
 https://www.freecodecamp.org/news/how-to-write-a-production-ready-node-and-express-app-f214f0b17d8c/
+https://github.com/goldbergyoni/nodebestpractices
+https://12factor.net/
 
 ## Roadmap
 - Using babel or webpack for module aliasing
@@ -103,6 +111,22 @@ https://www.freecodecamp.org/news/how-to-write-a-production-ready-node-and-expre
 - Making sure the application waits for mongodb connection before starting
 - Configure Corsoption
 - Snyk for vulnerability detection in packages
+- Using socket.io for adding any one of the real time applications
+- Ability to block user jwt with the help of redis
+- Check header algorith for jwt security (https://dev.to/techschoolguru/why-paseto-is-better-than-jwt-for-token-based-authentication-1b0c)
+- Add a nginx config file that shows (ssl, compression, static file output, and payload limitation)
+- Adding CI/CD
+- Using redis cache to make few of the important read faster (eg: Loading default jobs)
+- Image manipulation before upload
+- See if we can directly upload to s3 instead of going through nodejs
+
 
 ## Notable Things
 - Pagination has been optimized by using, estimatedDocumentCount for counting and then using promise all to run the queries parallely
+
+
+## Services used
+1. For Redis: https://console.upstash.com/
+2. For MongoDb: 
+3. For Node.js Server
+4. For APM: Sentry

@@ -1,9 +1,11 @@
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
+import aws from 'aws-sdk';
 
 /* eslint-disable import/extensions */
 import { iamServices } from '../services/index.services.js';
+import * as awsServices from '../services/aws.services.js';
 import logger from '../utils/logger.js';
 import config from '../config/index.js';
 // import { iamValidators } from '../utils/index.js';
@@ -105,5 +107,17 @@ export const login = async (req, res, next) => {
     res.send(user);
   } catch (error) {
     next(error);
+  }
+};
+
+export const profilePicPut = async (req, res, next) => {
+  try {
+    // const result = await awsServices.profilePicUpload(params);
+    // console.log(result);
+    console.log(req.file.location);
+    const url = await awsServices.getSignedUrlForObject();
+    res.send(url);
+  } catch (err) {
+    next(err);
   }
 };

@@ -26,6 +26,14 @@ const config = {
     STATUS: process.env.SENTRY_STATUS || 'off',
     DSN: process.env.SENTRY_DSN,
   },
+  AWS: {
+    AWS_KEY: process.env.AWS_KEY,
+    AWS_ACCESS_KEY: process.env.AWS_ACCESS_KEY,
+    S3: {
+      REGION: 'us-east-1',
+      PROFILE_PIC_BUCKET: 'marsilex',
+    },
+  },
 };
 
 export default config;
