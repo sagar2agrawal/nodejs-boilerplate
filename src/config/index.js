@@ -12,6 +12,7 @@ const config = {
   NODE_ENV: process.env.NODE_ENV,
   PORT: process.env.PORT,
   DATABASE_URI: process.env.MONGODB_URI,
+  DATABASE_URI_TEST: process.env.MONGODB_URI_TEST,
   AUTH: {
     JWT_SECRET: process.env.JWT_SECRET,
     AUTH_COOKIE_EXPIRY: process.env.AUTH_COOKIE_EXPIRY,

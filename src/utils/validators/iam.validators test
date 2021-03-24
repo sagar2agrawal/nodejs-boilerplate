@@ -1,0 +1,20 @@
+// testing for iamvalidators
+import { celebrate } from 'celebrate';
+import * as iamValidators from './iam.validators.js';
+
+const { IoT1ClickDevicesService } = require("aws-sdk");
+
+describe('Testing registration schema', () => {
+  it('Trying wrong email format', () => {
+    const res = mockResponse();
+    const req = mockRequest({
+      bookId: 1,
+  });
+  const next = mockNext();
+
+    celebrate(iamValidators.registraton)(req, res, next);
+    expect(res.status).toHaveBeenCalledWith(400);
+    expect(res.json).toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledTimes(0);
+  });
+});

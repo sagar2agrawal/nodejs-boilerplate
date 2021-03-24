@@ -1,8 +1,9 @@
 import aws from 'aws-sdk';
 import multer from 'multer';
 import multerS3 from 'multer-s3';
-import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 import config from '../config/index.js';
+import logger from '../utils/logger.js';
 
 aws.config.update({
   secretAccessKey: config.AWS.AWS_ACCESS_KEY,
@@ -28,7 +29,7 @@ export const uploadProfilePicRoute = multer({
       }
     },
     metadata: (req, file, cb) => cb(null, { fieldName: file.fieldname }),
-    key: (req, file, cb) => cb(null, Date.now().toString()),
+    key: (req, file, cb) => cb(null, uuidv4()),
   }),
 }).single('profilepic');
 
@@ -43,7 +44,7 @@ export const getSignedUrlForObject = async (s3ObjectSignedDTO) => {
 };
 
 export const profilePicUpload = async (profilePicUploadDTO) => {
-  const { filename } = profilePicUploadDTO;
+  logger.debug(`profile pic upload aws service dto ${profilePicUploadDTO}`);
   return new Promise((resolve, reject) => {
     s3.putObject(profilePicUploadDTO, (err, data) => {
       if (err) {

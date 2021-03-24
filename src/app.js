@@ -34,7 +34,7 @@ mongoose.connect(config.DATABASE_URI, {
   useCreateIndex: true,
 })
   .catch((error) => {
-    console.log(error);
+    logger.error(error);
   });
 
 app.use(cookieParser());

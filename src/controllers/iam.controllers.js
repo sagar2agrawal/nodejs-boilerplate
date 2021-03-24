@@ -1,7 +1,6 @@
 import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
-import aws from 'aws-sdk';
 
 /* eslint-disable import/extensions */
 import { iamServices } from '../services/index.services.js';
@@ -99,10 +98,10 @@ export const login = async (req, res, next) => {
         httpOnly: true,
         secure: true,
       });
-    }
 
-    delete user.salt;
-    delete user.password;
+      delete user.salt;
+      delete user.password;
+    }
 
     res.send(user);
   } catch (error) {
@@ -110,12 +109,21 @@ export const login = async (req, res, next) => {
   }
 };
 
+/*
+  Need to store the image info in database
+  Check if the image is already there, we need schedule delete old image
+*/
 export const profilePicPut = async (req, res, next) => {
   try {
     // const result = await awsServices.profilePicUpload(params);
     // console.log(result);
-    console.log(req.file.location);
-    const url = await awsServices.getSignedUrlForObject();
+    logger.debug(req.file);
+
+    const url = await awsServices.getSignedUrlForObject({
+      bucket: req.file.bucket,
+      key: req.file.key,
+    });
+
     res.send(url);
   } catch (err) {
     next(err);
