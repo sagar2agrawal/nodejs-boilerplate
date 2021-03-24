@@ -11,7 +11,7 @@
     "testEnvironment": "node"
   },
   "scripts": {
-    "test": "jest NODE_ENV=test MONGODB_URI=mongodb+srv://nodejstest:nodetest@testclusterfortesting.xw3bw.mongodb.net/myFirstDatabase",
+    "test": "jest",
     "start": "pm2 start src/server.js",
     "dev": "npx nodemon src/server.js"
   },
