@@ -26,6 +26,13 @@ export const generateJwt = (user) => {
   }, config.AUTH.JWT_SECRET, { expiresIn: 36000 });
 };
 
+// remove sensitive information from the user return object
+export const removeSensitiveInformation = (user) => {
+  const safeUser = user;
+  delete safeUser.password;
+  delete safeUser.hash;
+};
+
 /**
  * For registrating the user in the Database.
  * @api {post} v1/auth/register Register
@@ -59,6 +66,8 @@ export const registration = async (req, res, next) => {
     });
 
     const authToken = generateJwt(user);
+    logger.debug(`Generated AuthToekn ${authToken}`);
+
     // We will be making cookie secure by adding httponly, secure, expiry & domain etc
     if (user) {
       res.cookie('AuthToken', authToken, {
@@ -70,7 +79,7 @@ export const registration = async (req, res, next) => {
     delete user.salt;
     delete user.password;
 
-    res.send(user);
+    res.json(user);
   } catch (error) {
     next(error);
   }
@@ -91,19 +100,20 @@ export const login = async (req, res, next) => {
       throw new Error('Incorrect Password');
     }
 
+    // Generating the JWT token to be send via http cookie
     const authToken = generateJwt(user);
+
     // We will be making cookie secure by adding httponly, secure, expiry & domain etc
-    if (user) {
-      res.cookie('AuthToken', authToken, {
-        httpOnly: true,
-        secure: true,
-      });
+    res.cookie('AuthToken', authToken, {
+      httpOnly: true,
+      secure: true,
+    });
 
-      delete user.salt;
-      delete user.password;
-    }
+    // Making sure we don't send back password to the user
+    delete user.salt;
+    delete user.password;
 
-    res.send(user);
+    res.json(user);
   } catch (error) {
     next(error);
   }

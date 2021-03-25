@@ -2,7 +2,7 @@
 
 ## Note of Intent
 
-This is an open source project showing gratitude and giving back to the community, the open source is aimed for learning and understanding best practice with small piece of code and same time helping other people to learn collaboratively by not just talking but showing them how.
+This is an open-source project showing gratitude and giving back to the community, the open-source is aimed at learning and understanding best practices with small pieces of code and at the same time helping other people to learn collaboratively by not just talking but showing them how.
 
 ## Design Principle used
 // Working on it

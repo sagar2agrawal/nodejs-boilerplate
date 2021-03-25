@@ -5,25 +5,22 @@ import config from '../src/config/index.js';
 
 const request = supertest(app);
 
-beforeEach((done) => {
-  mongoose.connect(config.DATABASE_URI, {
+beforeAll((done) => {
+  mongoose.connect(config.DATABASE_URI_TEST, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useCreateIndex: true,
   }, () => done());
 });
 
-afterEach((done) => {
+afterAll((done) => {
   mongoose.connection.close(() => done());
 });
 
 describe('Checking Status route in app.js', () => {
-  test('Checking if response is okay', async () => {
+  test('Checking if response is okay', async (done) => {
     const res = await request.get('/status');
-    expect(res.statusCode).toEqual(200);
-  });
-
-  afterAll(async (done) => {
+    expect(res.status).toEqual(200);
     done();
   });
 });
