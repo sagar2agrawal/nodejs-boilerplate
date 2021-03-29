@@ -3,43 +3,18 @@ import { randomBytes } from 'crypto';
 import jwt from 'jsonwebtoken';
 
 /* eslint-disable import/extensions */
-import { iamServices } from '../services/index.services.js';
+import * as iamServices from '../services/iam.services.js';
 import * as awsServices from '../services/aws.services.js';
 import logger from '../utils/logger.js';
 import config from '../config/index.js';
-// import { iamValidators } from '../utils/index.js';
-
-// Generate the Hash password for security
-export const generateHashPassword = async (password) => {
-  const salt = await randomBytes(32);
-  const hashPassword = await argon2.hash(password, { salt });
-  const saltHex = salt.toString('hex');
-  return { hashPassword, saltHex };
-};
-
-// Generate JWT Tokens
-export const generateJwt = (user) => {
-  logger.debug('Generating JWT Token');
-  return jwt.sign({
-    name: user.name,
-    email: user.email,
-  }, config.AUTH.JWT_SECRET, { expiresIn: 36000 });
-};
-
-// remove sensitive information from the user return object
-export const removeSensitiveInformation = (user) => {
-  const safeUser = user;
-  delete safeUser.password;
-  delete safeUser.hash;
-};
 
 /**
  * For registrating the user in the Database.
- * @api {post} v1/auth/register Register
+ * @api {post} v1/iam/register Register
  * @apiDescription Register a new user
  * @apiVersion 1.0.0
  * @apiName Register
- * @apiGroup Auth
+ * @apiGroup IAM
  * @apiPermission public
  *
  * @param Email             Email | Email of the user
@@ -57,7 +32,7 @@ export const registration = async (req, res, next) => {
     }
 
     // Getting hashed password and salt to store instead of plan password
-    const { hashPassword, saltHex } = await generateHashPassword(password);
+    const { hashPassword, saltHex } = await iamServices.generateHashPassword(password);
 
     user = await iamServices.registration({
       ...req.body,
@@ -65,8 +40,8 @@ export const registration = async (req, res, next) => {
       password: hashPassword,
     });
 
-    const authToken = generateJwt(user);
-    logger.debug(`Generated AuthToekn ${authToken}`);
+    const authToken = iamServices.generateJwt(user);
+    logger.debug(`Generated AuthToken ${authToken}`);
 
     // We will be making cookie secure by adding httponly, secure, expiry & domain etc
     if (user) {
@@ -95,13 +70,12 @@ export const login = async (req, res, next) => {
     }
 
     const correctPass = await argon2.verify(user.password, password);
-
     if (!correctPass) {
-      throw new Error('Incorrect Password');
+      throw new Error('Incorrect Password!');
     }
 
     // Generating the JWT token to be send via http cookie
-    const authToken = generateJwt(user);
+    const authToken = iamServices.generateJwt(user);
 
     // We will be making cookie secure by adding httponly, secure, expiry & domain etc
     res.cookie('AuthToken', authToken, {
@@ -126,7 +100,7 @@ export const login = async (req, res, next) => {
 export const profilePicPut = async (req, res, next) => {
   try {
     // const result = await awsServices.profilePicUpload(params);
-    // console.log(result);
+    // logger.debug(result);
     logger.debug(req.file);
 
     const url = await awsServices.getSignedUrlForObject({
@@ -134,7 +108,7 @@ export const profilePicPut = async (req, res, next) => {
       key: req.file.key,
     });
 
-    res.send(url);
+    res.json(url);
   } catch (err) {
     next(err);
   }

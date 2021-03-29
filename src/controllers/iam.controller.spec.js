@@ -2,7 +2,6 @@ import argon2 from 'argon2';
 import { randomBytes } from 'crypto';
 import jwt, { JsonWebTokenError } from 'jsonwebtoken';
 
-/* eslint-disable import/extensions */
 import * as iamServices from '../services/iam.services.js';
 import * as awsServices from '../services/aws.services.js';
 import logger from '../utils/logger.js';
@@ -18,6 +17,9 @@ jest.mock('argon2');
 jest.mock('../services/iam.services.js', () => ({
   findUserByEmail: jest.fn(),
   registration: jest.fn(),
+  generateHashPassword: jest.fn(),
+  generateJwt: jest.fn(),
+  removeSensitiveInformation: jest.fn(),
 }));
 
 jest.mock('../utils/logger.js', () => ({
@@ -30,15 +32,11 @@ jest.mock('../utils/logger.js', () => ({
 
 // afterAll(() => testDb.closeDatabase);
 
-// beforeEach(() => {
-//   initializeCityDatabase();
-// });
+describe('testing login functionatily of IamController', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-// afterEach(() => {
-//   clearCityDatabase();
-// });
-
-describe('Testing Login functionatily of IamController', () => {
   const user = {
     name: 'firstname lastname',
     email: 'useremail@gmail.com',
@@ -49,26 +47,75 @@ describe('Testing Login functionatily of IamController', () => {
   const res = testInterceptors.mockResponse();
   const next = testInterceptors.mockNext();
 
-  // mocking the iamServices
-  
-  // iamServices.findUserByEmail = jest.fn();
-  // argon2.verify = jest.fn();
+  jest.spyOn(iamServices, 'generateJwt').mockImplementation(() => 'someAuthToken');
 
-  iamServices.findUserByEmail.mockResolvedValueOnce(user);
-  argon2.verify.mockResolvedValueOnce(true);
+  it('correct login', async () => {
+    expect.assertions(1);
 
-  iamControllers.generateJwt = jest.fn(() => 'someAuthToken');
+    iamServices.findUserByEmail.mockResolvedValueOnce(user);
+    argon2.verify.mockResolvedValueOnce(true);
 
-  test('correct login', async () => {
     await iamControllers.login(req, res, next);
     expect(res.json).toHaveBeenCalledWith(user);
   });
 
-  // test('Incorrect login with no email in database', () => {
-    // expect(() => compileAndroidCode()).toThrow('you are using the wrong JDK');
-  // });
+  it('incorrect password', async () => {
+    expect.assertions(2);
+    iamServices.findUserByEmail.mockResolvedValueOnce(user);
+    argon2.verify.mockResolvedValueOnce(false);
 
-  // test('Incorrect login with wrong password', () => {
+    await iamControllers.login(req, res, next);
+    expect(res.json).not.toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(new Error('Incorrect Password!'));
+  });
 
-  // });
+  it('no email in database', async () => {
+    expect.assertions(2);
+    iamServices.findUserByEmail.mockResolvedValueOnce(null);
+    argon2.verify.mockResolvedValueOnce(true);
+
+    await iamControllers.login(req, res, next);
+    expect(res.json).not.toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(new Error('Email does not exist'));
+  });
+});
+
+describe('testing registration functionatily of IamController', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  const user = {
+    name: 'firstname lastname',
+    email: 'useremail@gmail.com',
+    password: 'somepass',
+  };
+
+  const req = testInterceptors.mockRequest({}, user);
+  const res = testInterceptors.mockResponse();
+  const next = testInterceptors.mockNext();
+
+  jest.spyOn(iamServices, 'generateJwt').mockImplementation(() => 'someAuthToken');
+  iamServices.generateHashPassword.mockResolvedValue({ hashPassword: 'hp', saltHex: 'sh' });
+
+  it('successful registration', async () => {
+    expect.assertions(1);
+
+    iamServices.findUserByEmail.mockResolvedValueOnce(null);
+    iamServices.registration.mockResolvedValueOnce(user);
+    argon2.verify.mockResolvedValueOnce(true);
+
+    await iamControllers.registration(req, res, next);
+    expect(res.json).toHaveBeenCalledWith(user);
+  });
+
+  it('user already exists', async () => {
+    expect.assertions(2);
+    iamServices.findUserByEmail.mockResolvedValueOnce(user);
+    iamServices.registration.mockResolvedValueOnce(user);
+
+    await iamControllers.registration(req, res, next);
+    expect(res.json).not.toHaveBeenCalledTimes(1);
+    expect(next).toHaveBeenCalledWith(new Error('User Already Exist'));
+  });
 });

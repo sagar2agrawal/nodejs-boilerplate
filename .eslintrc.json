@@ -4,12 +4,28 @@
         "node": true
     },
     "extends": [
-        "airbnb-base"
+        "airbnb-base",
+        "plugin:jest/recommended",
+        "plugin:jest/style",
+        "plugin:jest/all"
     ],
     "parserOptions": {
         "ecmaVersion": 12,
         "sourceType": "module"
     },
     "rules": {
-    }
+        "import/extensions": "off",
+        "jest/no-disabled-tests": "warn",
+        "jest/no-focused-tests": "error",
+        "jest/no-identical-title": "error",
+        "jest/prefer-to-have-length": "warn",
+        "jest/valid-expect": "error",
+        "jest/no-hooks": [
+            "error",
+            {
+              "allow": ["afterEach", "afterAll"]
+            }
+          ]
+    },
+    "plugins": ["jest"]
 }
