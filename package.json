@@ -12,7 +12,7 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "pm2 start src/server.js",
+    "start": "pm2 start src/server.js --max-memory-restart 200M",
     "dev": "npx nodemon src/server.js"
   },
   "repository": {

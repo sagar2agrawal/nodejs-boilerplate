@@ -27,6 +27,8 @@ export const registration = async (req, res, next) => {
   try {
     let user = await iamServices.findUserByEmail(email);
     logger.debug(`FindByEmail user : ${user?.email} for registration`);
+
+    // Throwing Error if the user already exists
     if (user !== null) {
       throw new Error('User Already Exist');
     }

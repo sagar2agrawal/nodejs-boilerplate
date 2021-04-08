@@ -39,12 +39,16 @@ export const generateHashPassword = async (password) => {
   return { hashPassword, saltHex };
 };
 
-// Generate JWT Tokens
+/*
+  Generate JWT Tokens with user details that are requied for
+*/
 export const generateJwt = (user) => {
   logger.debug('Generating JWT Token');
   return jwt.sign({
     name: user.name,
-    email: user.email,
+    // eslint-disable-next-line no-underscore-dangle
+    id: user._id,
+    userRole: user.role,
   }, config.AUTH.JWT_SECRET, { expiresIn: 36000 });
 };
 

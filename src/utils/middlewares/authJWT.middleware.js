@@ -6,12 +6,18 @@ const authJWT = (req, res, next) => {
 
   try {
     if (authToken) {
-      // const token = req.headers.authorization.split(' ')[1]; // Bearer <token>
       jwt.verify(authToken, config.AUTH.JWT_SECRET, (err, decodedAuthToken) => {
         if (err) {
           throw new Error('Issues with Authentication Token');
         }
+
+        // Adding the current user info to req object so controller can use it
+        req.user = {};
+        req.user.id = decodedAuthToken.id;
+        req.user.name = decodedAuthToken.name;
+        req.user.role = decodedAuthToken.role;
         req.decodedAuthToken = decodedAuthToken;
+
         next();
       });
     } else {
