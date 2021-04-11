@@ -105,3 +105,6 @@ dist
 
 # Temp uploads
 uploads/
+
+# Generated JSDocs
+docs/

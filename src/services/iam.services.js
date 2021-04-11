@@ -39,9 +39,9 @@ export const generateHashPassword = async (password) => {
   return { hashPassword, saltHex };
 };
 
-/*
-  Generate JWT Tokens with user details that are requied for
-*/
+/**
+ *Generate JWT Tokens with user details that are requied for
+ */
 export const generateJwt = (user) => {
   logger.debug('Generating JWT Token');
   return jwt.sign({
@@ -52,9 +52,14 @@ export const generateJwt = (user) => {
   }, config.AUTH.JWT_SECRET, { expiresIn: 36000 });
 };
 
-// remove sensitive information from the user return object
+/**
+ * remove sensitive information from the user return object for login, sign-up
+ * @param {*} user
+ * @returns {User} user object
+ */
 export const removeSensitiveInformation = (user) => {
   const safeUser = user;
   delete safeUser.password;
   delete safeUser.hash;
+  return safeUser;
 };
